@@ -659,4 +659,4 @@ workflows:
             branches:
               only: test/circleci
           requires:
-            - "tests/integration"
+            - "rpm/sign"
