@@ -1,5 +1,53 @@
 version: 2
 jobs:
+  # Build a statically linked Falco release binary using musl
+  # This build is 100% static, there are no host dependencies
+  "build/musl":
+    docker:
+      - image: alpine:3.12
+    steps:
+      - checkout:
+          path: /source-static/falco
+      - run:
+          name: Update base image
+          command: apk update
+      - run:
+          name: Install build dependencies
+          command: apk add g++ gcc cmake cmake make git bash perl linux-headers autoconf automake m4 libtool elfutils-dev libelf-static patch binutils
+      - run:
+          name: Prepare project
+          command: |
+            mkdir -p /build-static/release
+            cd /build-static/release
+            cmake -DCPACK_GENERATOR=TGZ -DBUILD_BPF=Off -DBUILD_DRIVER=Off -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED_DEPS=On -DMUSL_OPTIMIZED_BUILD=On -DFALCO_ETC_DIR=/etc/falco /source-static/falco
+      - run:
+          name: Build
+          command: |
+            cd /build-static/release
+            make -j4 all
+      - run:
+          name: Package
+          command: |
+            cd /build-static/release
+            make -j4 package
+      - run:
+          name: Run unit tests
+          command: |
+            cd /build-static/release
+            make tests
+      - run:
+          name: Prepare artifacts
+          command: |
+            mkdir -p /tmp/packages
+            cp /build-static/release/*.tar.gz /tmp/packages
+      - store_artifacts:
+          path: /tmp/packages
+          destination: /packages
+      - persist_to_workspace:
+          root: /
+          paths:
+            - build-static/release
+            - source-static
   # Build using our own builder base image using centos 7
   # This build is static, dependencies are bundled in the Falco binary
   "build/centos7":
@@ -381,6 +429,7 @@ workflows:
   version: 2
   build_and_test:
     jobs:
+      - "build/musl"
       - "build/centos7"
       - "tests/integration":
           requires:
