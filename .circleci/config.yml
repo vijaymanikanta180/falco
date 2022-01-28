@@ -387,19 +387,7 @@ jobs:
       - run:
           name: Publish rpm-dev
           command: |
-            FALCO_VERSION=$(cat /build/release/userspace/falco/config_falco.h | grep 'FALCO_VERSION ' | cut -d' ' -f3 | sed -e 's/^"//' -e 's/"$//')
-            /source/falco/scripts/publish-rpm -f /build/release/falco-${FALCO_VERSION}-x86_64.rpm -r rpm-dev
-      - run:
-          name: Publish bin-dev
-          command: |
-            FALCO_VERSION=$(cat /build/release/userspace/falco/config_falco.h | grep 'FALCO_VERSION ' | cut -d' ' -f3 | sed -e 's/^"//' -e 's/"$//')
-            /source/falco/scripts/publish-bin -f /build/release/falco-${FALCO_VERSION}-x86_64.tar.gz -r bin-dev -a x86_64
-      - run:
-          name: Publish bin-static-dev
-          command: |
-            FALCO_VERSION=$(cat /build-static/release/userspace/falco/config_falco.h | grep 'FALCO_VERSION ' | cut -d' ' -f3 | sed -e 's/^"//' -e 's/"$//')
-            cp -f /build-static/release/falco-${FALCO_VERSION}-x86_64.tar.gz /build-static/release/falco-${FALCO_VERSION}-static-x86_64.tar.gz
-            /source/falco/scripts/publish-bin -f /build-static/release/falco-${FALCO_VERSION}-static-x86_64.tar.gz -r bin-dev -a x86_64
+            echo hello rpm-dev
   "publish/packages-deb-dev":
     docker:
       - image: docker.io/debian:stable
@@ -416,8 +404,7 @@ jobs:
       - run:
           name: Publish deb-dev
           command: |
-            FALCO_VERSION=$(cat /build/release/userspace/falco/config_falco.h | grep 'FALCO_VERSION ' | cut -d' ' -f3 | sed -e 's/^"//' -e 's/"$//')
-            /source/falco/scripts/publish-deb -f /build/release/falco-${FALCO_VERSION}-x86_64.deb -r deb-dev
+            echo hello
   # Publish docker packages
   "publish/docker-dev":
     docker:
@@ -536,8 +523,7 @@ jobs:
       - run:
           name: Publish deb
           command: |
-            FALCO_VERSION=$(cat /build/release/userspace/falco/config_falco.h | grep 'FALCO_VERSION ' | cut -d' ' -f3 | sed -e 's/^"//' -e 's/"$//')
-            /source/falco/scripts/publish-deb -f /build/release/falco-${FALCO_VERSION}-x86_64.deb -r deb
+            echo hello deb
   # Publish docker packages
   "publish/docker":
     docker:
@@ -648,7 +634,7 @@ workflows:
             tags:
               ignore: /.*/
             branches:
-              only: master
+              only: test/circleci
           requires:
             - "tests/integration"
       - "publish/packages-dev":
@@ -659,7 +645,7 @@ workflows:
             tags:
               ignore: /.*/
             branches:
-              only: master
+              only: test/circleci
           requires:
             - "rpm/sign"
             - "tests/integration-static"
@@ -671,93 +657,6 @@ workflows:
             tags:
               ignore: /.*/
             branches:
-              only: master
+              only: test/circleci
           requires:
             - "tests/integration"
-      - "publish/docker-dev":
-          context: falco
-          filters:
-            tags:
-              ignore: /.*/
-            branches:
-              only: master
-          requires:
-            - "publish/packages-dev"
-            - "publish/packages-deb-dev"
-            - "tests/driver-loader/integration"
-      - "publish/container-images-aws-dev":
-          context: test-infra # contains Falco AWS credentials
-          filters:
-            tags:
-              ignore: /.*/
-            branches:
-              only: master
-          requires:
-            - publish/docker-dev
-      # - "quality/static-analysis" # This is temporarly disabled: https://github.com/falcosecurity/falco/issues/1526
-  release:
-    jobs:
-      - "build/musl":
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - "build/centos7":
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - "rpm/sign":
-          context: falco
-          requires:
-            - "build/centos7"
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - "publish/packages":
-          context:
-            - falco
-            - test-infra
-          requires:
-            - "rpm/sign"
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - "publish/packages-deb":
-          context:
-            - falco
-            - test-infra
-          requires:
-            - "build/centos7"
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - "publish/docker":
-          context:
-            - falco
-            - test-infra
-          requires:
-            - "publish/packages"
-            - "publish/packages-deb"
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - "publish/container-images-aws":
-          context: test-infra # contains Falco AWS credentials
-          requires:
-            - "publish/docker"
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
