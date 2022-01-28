@@ -208,7 +208,7 @@ jobs:
             echo hello rpm-dev
   "publish/packages-deb-dev":
     docker:
-      - image: docker.io/debian:stable
+      - image: docker.io/debian:stable-20211220
     steps:
       - attach_workspace:
           at: /
@@ -327,7 +327,7 @@ jobs:
             /source/falco/scripts/publish-bin -f /build/release/falco-${FALCO_VERSION}-static-x86_64.tar.gz -r bin -a x86_64
   "publish/packages-deb":
     docker:
-      - image: docker.io/debian:stable
+      - image: docker.io/debian:stable-20211220
     steps:
       - attach_workspace:
           at: /
