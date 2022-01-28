@@ -206,7 +206,7 @@ jobs:
           name: Publish rpm-dev
           command: |
             echo hello rpm-dev
-  "publish/packages-deb-dev":
+  "publish/packages-deb-dev-name":
     docker:
       - image: ubuntu:focal
     steps:
@@ -461,7 +461,7 @@ workflows:
           requires:
             - "rpm/sign"
             - "tests/integration-static"
-      - "publish/packages-deb-dev":
+      - "publish/packages-deb-dev-name":
           context:
             - falco
             - test-infra
