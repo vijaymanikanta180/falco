@@ -208,7 +208,7 @@ jobs:
             echo hello rpm-dev
   "publish/packages-deb-dev":
     docker:
-      - image: docker.io/debian:stable-20211220
+      - image: ubuntu:focal
     steps:
       - attach_workspace:
           at: /
