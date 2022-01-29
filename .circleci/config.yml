@@ -56,17 +56,17 @@ jobs:
           path: /build/release/integration-tests-xunit
   "publish/packages-deb-dev-name":
     docker:
-      - image: ubuntu:focal
+      - image: centos:centos8
     steps:
       - attach_workspace:
           at: /
-      - run:
-          name: Setup
-          command: |
-            apt update -y
-            apt-get install apt-utils bzip2 gpg python python3-pip -y
-            pip install awscli
-            echo $GPG_KEY | base64 -d | gpg --import
+      # - run:
+      #     name: Setup
+      #     command: |
+      #       apt update -y
+      #       apt-get install apt-utils bzip2 gpg python python3-pip -y
+      #       pip install awscli
+      #       echo $GPG_KEY | base64 -d | gpg --import
       - run:
           name: Publish deb-dev
           command: |
