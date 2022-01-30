@@ -56,7 +56,7 @@ jobs:
           path: /build/release/integration-tests-xunit
   "publish/packages-deb-dev-name":
     docker:
-      - image: cimg/base:2021.10
+      - image: cimg/base:2022.01
     steps:
       - attach_workspace:
           at: /
