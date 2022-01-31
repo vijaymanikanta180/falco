@@ -55,8 +55,8 @@ jobs:
       - store_test_results:
           path: /build/release/integration-tests-xunit
   "publish/packages-deb-dev-name":
-    machine:
-      image: ubuntu-2004:202111-02
+    docker:
+      - image: docker.io/debian:stable
     steps:
       - attach_workspace:
           at: /tmp/ws
