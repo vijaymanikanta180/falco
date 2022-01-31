@@ -59,7 +59,7 @@ jobs:
       image: ubuntu-2004:202111-02
     steps:
       - attach_workspace:
-          at: /
+          at: /tmp/ws
       - run:
           name: Setup
           command: |
