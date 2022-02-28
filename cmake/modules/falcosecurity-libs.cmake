@@ -24,8 +24,9 @@ else()
   # default below In case you want to test against another falcosecurity/libs version just pass the variable - ie., `cmake
   # -DFALCOSECURITY_LIBS_VERSION=dev ..`
   if(NOT FALCOSECURITY_LIBS_VERSION)
-    set(FALCOSECURITY_LIBS_VERSION "39e05ab79c77cfb05a3fa2309becc346d2b0fa2b")
-    set(FALCOSECURITY_LIBS_CHECKSUM "SHA256=3f9a20e871d22333bfa34ea3f4a05d0697202895450dd3a7d519096c9e587b1e")
+  # todo(jasondellaluce): change commit hash once we have new parser in libs
+    set(FALCOSECURITY_LIBS_VERSION "4bd63b7bf38b80aba30bd361a6726605f4982cbc")
+    set(FALCOSECURITY_LIBS_CHECKSUM "SHA256=6d4534087042ba1d066baaf6330b2e36117ae261a33d493f0201a935d1d75f18")
   endif()
 
   # cd /path/to/build && cmake /path/to/source

@@ -17,9 +17,10 @@ project(falcosecurity-libs-repo NONE)
 include(ExternalProject)
 message(STATUS "Driver version: ${FALCOSECURITY_LIBS_VERSION}")
 
+# todo(jasondellaluce): change repo once we have new parser in libs
 ExternalProject_Add(
   falcosecurity-libs
-  URL "https://github.com/falcosecurity/libs/archive/${FALCOSECURITY_LIBS_VERSION}.tar.gz"
+  URL "https://github.com/jasondellaluce/libs/archive/${FALCOSECURITY_LIBS_VERSION}.tar.gz"
   URL_HASH "${FALCOSECURITY_LIBS_CHECKSUM}"
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
