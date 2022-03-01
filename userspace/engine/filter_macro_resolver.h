@@ -32,14 +32,14 @@ class filter_macro_resolver: private libsinsp::filter::ast::expr_visitor
 
 		/*!
 			\brief Visits a filter AST and substitutes macro references
-			according with all the definitions added through define_macro(),
+			according with all the definitions added through set_macro(),
 			by replacing the reference with a clone of the macro AST.
 			\param filter The filter AST to be processed. Note that the pointer is
 			passed by reference, and can potentially change in order to apply
 			the substutions. In that case, the old pointer is owned by this
 			class and is deleted automatically.
 		*/
-		void process(libsinsp::filter::ast::expr*& filter);
+		void run(libsinsp::filter::ast::expr*& filter);
 
 		/*!
 			\brief Defines a new macro to be substituted in filters. If called
@@ -50,19 +50,19 @@ class filter_macro_resolver: private libsinsp::filter::ast::expr_visitor
 			internally, so the passed-in pointer is always owned by the caller
 			and is never modified/deleted by this method.
 		*/
-		void define_macro(std::string name, libsinsp::filter::ast::expr* macro);
+		void set_macro(std::string name, libsinsp::filter::ast::expr* macro);
 
 		/*!
 			\brief Returns a set containing the names of all the macros
-			substituted during the last invocation of process().
+			substituted during the last invocation of run().
 		*/
 		std::set<std::string>& get_resolved_macros();
 
 		/*!
 			\brief Returns a set containing the names of all the macros
-			that remained unresolved during the last invocation of process().
+			that remained unresolved during the last invocation of run().
 			A macro remains unresolved if it is found inside the processed
-			filter but it was not defined with define_macro();
+			filter but it was not defined with set_macro();
 		*/
 		std::set<std::string>& get_unknown_macros();
 		

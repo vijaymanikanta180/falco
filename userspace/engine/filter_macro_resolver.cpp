@@ -27,7 +27,7 @@ filter_macro_resolver::~filter_macro_resolver()
 	}
 }
 
-void filter_macro_resolver::process(libsinsp::filter::ast::expr*& filter)
+void filter_macro_resolver::run(libsinsp::filter::ast::expr*& filter)
 {
 	m_unknown_macros.clear();
 	m_resolved_macros.clear();
@@ -41,7 +41,7 @@ void filter_macro_resolver::process(libsinsp::filter::ast::expr*& filter)
 	}
 }
 
-void filter_macro_resolver::define_macro(string name, libsinsp::filter::ast::expr* macro)
+void filter_macro_resolver::set_macro(string name, libsinsp::filter::ast::expr* macro)
 {
 	auto it = m_macros.find(name);
 	if (it != m_macros.end())
@@ -103,7 +103,7 @@ void filter_macro_resolver::visit(ast::not_expr& e)
 	m_last_node_changed = false;
 }
 
-void filter_macro_resolver::visit(ast::list_expr& e)
+void filter_macro_resolver::visit(ast::unary_check_expr& e)
 {
 	m_last_node = &e;
 	m_last_node_changed = false;
@@ -117,7 +117,7 @@ void filter_macro_resolver::visit(ast::binary_check_expr& e)
 	m_last_node_changed = false;
 }
 
-void filter_macro_resolver::visit(ast::unary_check_expr& e)
+void filter_macro_resolver::visit(ast::list_expr& e)
 {
 	m_last_node = &e;
 	m_last_node_changed = false;
@@ -131,8 +131,8 @@ void filter_macro_resolver::visit(ast::value_expr& e)
 	auto macro = m_macros.find(e.value);
 	if (macro != m_macros.end())
 	{
-		// todo(jasondellaluce): should we visit down the new resolved AST too?
-		m_last_node = ast::clone(macro->second);
+		ast::expr* new_node = ast::clone(macro->second);
+		new_node->accept(*this); // this sets m_last_node
 		m_last_node_changed = true;
 		m_resolved_macros.insert(e.value);
 	}

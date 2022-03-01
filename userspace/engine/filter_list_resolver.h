@@ -31,13 +31,13 @@ class filter_list_resolver: private libsinsp::filter::ast::base_expr_visitor
 	public:
 		/*!
 			\brief Visits a filter AST and substitutes list references
-			according with all the definitions added through define_list().
+			according with all the definitions added through set_list().
 			\param filter The filter AST to be processed. Note that the pointer is
 			passed by reference, and can potentially change in order to apply
 			the substutions. In that case, the old pointer is owned by this
 			class and is deleted automatically.
 		*/
-		void process(libsinsp::filter::ast::expr*& filter);
+		void run(libsinsp::filter::ast::expr*& filter);
 
 		/*!
 			\brief Defines a new list to be substituted in filters. If called
@@ -46,11 +46,11 @@ class filter_list_resolver: private libsinsp::filter::ast::base_expr_visitor
 			\param name The name of the list.
 			\param values The values contained in the list.
 		*/
-		void define_list(std::string name, std::vector<std::string>& values); 
+		void set_list(std::string name, std::vector<std::string>& values); 
 
 		/*!
 			\brief Returns a set containing the names of all the lists
-			substituted during the last invocation of process().
+			substituted during the last invocation of run().
 		*/
 		std::set<std::string>& get_resolved_lists();
 		

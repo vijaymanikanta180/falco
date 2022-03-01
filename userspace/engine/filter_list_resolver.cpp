@@ -19,13 +19,13 @@ limitations under the License.
 using namespace std;
 using namespace libsinsp::filter;
 
-void filter_list_resolver::process(libsinsp::filter::ast::expr*& filter)
+void filter_list_resolver::run(libsinsp::filter::ast::expr*& filter)
 {
 	m_resolved_lists.clear();
 	filter->accept(*this);
 }
 
-void filter_list_resolver::define_list(string name, std::vector<std::string>& values)
+void filter_list_resolver::set_list(string name, std::vector<std::string>& values)
 {
 	m_lists[name] = values;
 }

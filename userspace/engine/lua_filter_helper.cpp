@@ -136,8 +136,8 @@ int lua_filter_helper::expand_list(lua_State *ls)
 	}
 	
 	filter_list_resolver resolver;
-	resolver.define_list(name, values);
-	resolver.process(ast);
+	resolver.set_list(name, values);
+	resolver.run(ast);
 	lua_pushboolean(ls, !resolver.get_resolved_lists().empty());
 	lua_pushlightuserdata(ls, ast);
 	return 2;
@@ -158,8 +158,8 @@ int lua_filter_helper::expand_macro(lua_State *ls)
 	ast::expr* macro = (ast::expr*) lua_topointer(ls, -1);
 
 	filter_macro_resolver resolver;
-	resolver.define_macro(name, macro);
-	resolver.process(ast);
+	resolver.set_macro(name, macro);
+	resolver.run(ast);
 	lua_pushboolean(ls, !resolver.get_resolved_macros().empty());
 	lua_pushlightuserdata(ls, ast);
 	return 2;
@@ -176,7 +176,7 @@ int lua_filter_helper::find_unknown_macro(lua_State *ls)
 	ast::expr* ast = (ast::expr*) lua_topointer(ls, -1);
 
 	filter_macro_resolver resolver;
-	resolver.process(ast);
+	resolver.run(ast);
 	if (!resolver.get_unknown_macros().empty())
 	{
 		lua_pushboolean(ls, true);
