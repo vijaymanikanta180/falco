@@ -483,7 +483,7 @@ int falco_init(int argc, char **argv)
 		{
 			if (!p.empty())
 			{
-				inspector->add_cri_socket_path(p);
+				// inspector->add_cri_socket_path(p);
 			}
 		}
 
